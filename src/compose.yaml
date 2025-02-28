@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app-a:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=app-a
+      # - APP_URL_DESTINO=http://app-b:8000
+      # - APP_ERRORS=5
+      # - APP_LATENCY=100
+    networks:
+      - app-network
+
+  # app-b:
+  #   build: .
+  #   ports:
+  #     - "8001:8000"
+  #   environment:
+  #     - APP_NAME=app-b
+  #     - APP_URL_DESTINO=http://app-c:8000
+  #     - APP_ERRORS=10
+  #     - APP_LATENCY=150
+  #   networks:
+  #     - app-network
+
+  # app-c:
+  #   build: .
+  #   ports:
+  #     - "8002:8000"
+  #   environment:
+  #     - APP_NAME=app-c
+  #     - APP_ERRORS=15
+  #     - APP_LATENCY=200
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
