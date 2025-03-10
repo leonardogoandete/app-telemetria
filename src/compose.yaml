@@ -5,11 +5,12 @@ services:
     build: .
     ports:
       - "8000:8000"
+      - "8080:8080"
     environment:
       - APP_NAME=app-a
       # - APP_URL_DESTINO=http://app-b:8000
       # - APP_ERRORS=5
-      # - APP_LATENCY=100
+      - APP_LATENCY=100
     networks:
       - app-network
 
