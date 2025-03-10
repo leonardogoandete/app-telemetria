@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'app-a'
+    static_configs:
+      - targets: ['app-a:8080']
+        # labels:
+        #   service: 'app-a'
+  - job_name: 'app-b'
+    static_configs:
+      - targets: ['app-b:8080']
+        # labels:
+        #   service: 'app-b'
+  - job_name: 'app-c'
+    static_configs:
+      - targets: ['app-c:8080']
+        # labels:
+        #   service: 'app-c'
