@@ -16,7 +16,7 @@ spec:
     metadata:
       predictHorizon: "2h"                    # Prediz para as próximas 2 horas
       historyTimeWindow: "7d"                 # Usa 7 dias de dados históricos
-      prometheusAddress: "http://prometheus-service:9090"  # Endereço do Prometheus
+      prometheusAddress: "http://prometheus-service.default.svc.cluster.local:9090"  # Endereço completo do Prometheus
       query: "sum(rate(app_requests_total{job=\"app-a\"}[2m]))"  # Query para métricas de request rate
       queryStep: "2m"                        # Intervalo de 2 minutos para queries
       threshold: "10"                        # Threshold para começar a escalar
