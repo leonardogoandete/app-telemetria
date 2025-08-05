@@ -1,0 +1,25 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: app-a-predictkube-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: app-a
+    kind: Deployment
+  pollingInterval: 30                # Verifica a cada 30 segundos
+  cooldownPeriod: 7200               # 2 horas de cooldown (igual ao predictHorizon)
+  minReplicaCount: 1                 # Mínimo 1 réplica
+  maxReplicaCount: 10                # Máximo 10 réplicas
+  triggers:
+  - type: predictkube
+    metadata:
+      predictHorizon: "2h"                    # Prediz para as próximas 2 horas
+      historyTimeWindow: "7d"                 # Usa 7 dias de dados históricos
+      prometheusAddress: "http://prometheus-service:9090"  # Endereço do Prometheus
+      query: "sum(rate(app_requests_total{job=\"app-a\"}[2m]))"  # Query para métricas de request rate
+      queryStep: "2m"                        # Intervalo de 2 minutos para queries
+      threshold: "10"                        # Threshold para começar a escalar
+      activationThreshold: "5"               # Threshold para ativar o scaler
+    authenticationRef:
+      name: predictkube-trigger-auth

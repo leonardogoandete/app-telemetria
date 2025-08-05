@@ -1,0 +1,10 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: predictkube-trigger-auth
+  namespace: default
+spec:
+  secretTargetRef:
+  - parameter: apiKey
+    name: predictkube-secrets
+    key: apiKey

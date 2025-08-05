@@ -9,3 +9,5 @@ resources:
   - app-a-deployment.yaml
   - app-a-service.yaml
   - app-a-ingress.yaml
+  - predictkube-triggerauthentication.yaml
+  - app-a-predictkube-scaledobject.yaml
