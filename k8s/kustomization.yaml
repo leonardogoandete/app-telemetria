@@ -6,6 +6,12 @@ resources:
   - prometheus-configmap.yaml
   - prometheus-deployment.yaml
   - prometheus-service.yaml
+  - grafana-configmap.yaml
+  - grafana-datasources.yaml
+  - grafana-dashboards-config.yaml
+  - grafana-dashboard.yaml
+  - grafana-deployment.yaml
+  - grafana-service.yaml
   - app-a-deployment.yaml
   - app-a-service.yaml
   - app-a-ingress.yaml

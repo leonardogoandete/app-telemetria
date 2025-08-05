@@ -1,0 +1,374 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-telemetria
+  namespace: default
+data:
+  telemetria-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "App Telemetria - PredictKube Dashboard",
+        "tags": ["telemetria", "app-a", "predictkube", "k6"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "🚀 Request Rate (Current)",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "sum(rate(app_requests_total{job=\"app-a\"}[2m]))",
+                "legendFormat": "Requests/sec",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 5},
+                    {"color": "red", "value": 10}
+                  ]
+                },
+                "unit": "reqps",
+                "decimals": 2
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "📊 Total Requests",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "sum(app_requests_total{job=\"app-a\"})",
+                "legendFormat": "Total",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "short"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "🎯 PredictKube Threshold",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "vector(10)",
+                "legendFormat": "Threshold",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                },
+                "unit": "reqps"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+          },
+          {
+            "id": 4,
+            "title": "🔧 Active Pods",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "count(up{job=\"app-a\"} == 1)",
+                "legendFormat": "Pods",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "blue", "value": null},
+                    {"color": "green", "value": 2},
+                    {"color": "yellow", "value": 5},
+                    {"color": "red", "value": 8}
+                  ]
+                },
+                "unit": "short"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+          },
+          {
+            "id": 5,
+            "title": "📈 Request Rate Trend (PredictKube Monitor)",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "sum(rate(app_requests_total{job=\"app-a\"}[2m]))",
+                "legendFormat": "Current Rate",
+                "refId": "A"
+              },
+              {
+                "expr": "vector(10)",
+                "legendFormat": "Scaling Threshold",
+                "refId": "B"
+              },
+              {
+                "expr": "vector(5)",
+                "legendFormat": "Activation Threshold",
+                "refId": "C"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "reqps"
+              },
+              "overrides": [
+                {
+                  "matcher": {"id": "byName", "options": "Scaling Threshold"},
+                  "properties": [
+                    {"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}},
+                    {"id": "custom.lineStyle", "value": {"dash": [10, 10]}}
+                  ]
+                },
+                {
+                  "matcher": {"id": "byName", "options": "Activation Threshold"},
+                  "properties": [
+                    {"id": "color", "value": {"mode": "fixed", "fixedColor": "orange"}},
+                    {"id": "custom.lineStyle", "value": {"dash": [5, 5]}}
+                  ]
+                }
+              ]
+            },
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+          },
+          {
+            "id": 6,
+            "title": "🏗️ Pod Scaling Activity",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "count(up{job=\"app-a\"} == 1)",
+                "legendFormat": "Active Pods",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "short",
+                "min": 0,
+                "max": 10
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+          },
+          {
+            "id": 7,
+            "title": "📋 Request Distribution by Endpoint",
+            "type": "piechart",
+            "targets": [
+              {
+                "expr": "sum by (endpoint) (app_requests_total{job=\"app-a\"})",
+                "legendFormat": "{{endpoint}}",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "short"
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+          },
+          {
+            "id": 8,
+            "title": "🕐 Historical Data Simulation (7 Days)",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "app_requests_historical_1d",
+                "legendFormat": "1 day ago",
+                "refId": "A"
+              },
+              {
+                "expr": "app_requests_historical_2d",
+                "legendFormat": "2 days ago",
+                "refId": "B"
+              },
+              {
+                "expr": "app_requests_historical_3d",
+                "legendFormat": "3 days ago",
+                "refId": "C"
+              },
+              {
+                "expr": "app_requests_historical_4d",
+                "legendFormat": "4 days ago",
+                "refId": "D"
+              },
+              {
+                "expr": "app_requests_historical_5d",
+                "legendFormat": "5 days ago",
+                "refId": "E"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "short"
+              }
+            },
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24}
+          },
+          {
+            "id": 9,
+            "title": "⚡ K6 Load Testing Metrics",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "sum(rate(app_requests_total{job=\"app-a\"}[1m]))",
+                "legendFormat": "Request Rate (1m)",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "reqps"
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32}
+          },
+          {
+            "id": 10,
+            "title": "🎛️ KEDA Metrics Service Activity",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(keda_internal_metricsservice_grpc_client_handled_total{grpc_code=\"OK\"}[5m])",
+                "legendFormat": "Success Rate",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 0.1},
+                    {"color": "green", "value": 1}
+                  ]
+                },
+                "unit": "ops"
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32}
+          },
+          {
+            "id": 11,
+            "title": "📊 KEDA gRPC Requests",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "rate(keda_internal_metricsservice_grpc_client_handled_total[5m])",
+                "legendFormat": "{{grpc_code}} requests",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "ops"
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 40}
+          },
+          {
+            "id": 12,
+            "title": "⏱️ KEDA gRPC Latency",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "rate(keda_internal_metricsservice_grpc_client_handling_seconds_sum[5m]) / rate(keda_internal_metricsservice_grpc_client_handling_seconds_count[5m])",
+                "legendFormat": "Avg Latency",
+                "refId": "A"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "s"
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 40}
+          },
+          {
+            "id": 13,
+            "title": "🚨 KEDA System Health",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "rate(keda_internal_metricsservice_grpc_client_handled_total{grpc_code!=\"OK\"}[5m])",
+                "legendFormat": "Error Rate - {{grpc_code}}",
+                "refId": "A"
+              },
+              {
+                "expr": "rate(keda_internal_metricsservice_grpc_client_started_total[5m]) - rate(keda_internal_metricsservice_grpc_client_handled_total[5m])",
+                "legendFormat": "Pending Requests",
+                "refId": "B"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "unit": "ops"
+              }
+            },
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 48}
+          }
+        ],
+        "time": {
+          "from": "now-30m",
+          "to": "now"
+        },
+        "refresh": "5s",
+        "version": 1,
+        "fiscalYearStartMonth": 0
+      }
+    }

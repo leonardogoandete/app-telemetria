@@ -7,8 +7,8 @@ spec:
   scaleTargetRef:
     name: app-a
     kind: Deployment
-  pollingInterval: 30                # Verifica a cada 30 segundos
-  cooldownPeriod: 7200               # 2 horas de cooldown (igual ao predictHorizon)
+  pollingInterval: 10                # Verifica a cada 10 segundos
+  cooldownPeriod: 120                # 2 minutos de cooldown
   minReplicaCount: 1                 # Mínimo 1 réplica
   maxReplicaCount: 10                # Máximo 10 réplicas
   triggers:
